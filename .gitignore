@@ -2,6 +2,8 @@
 # This .gitignore file was automatically created by Microsoft(R) Visual Studio.
 ################################################################################
 
-/.vs/Algos/v15
-/HasCycle/bin/Debug/netcoreapp2.0
-/HasCycle/obj
+/.vs
+/DetectCyclesUndirectedGraph/bin
+/DetectCyclesUndirectedGraph/obj
+/PrintCyclesUndirectedGraph/bin
+/PrintCyclesUndirectedGraph/obj

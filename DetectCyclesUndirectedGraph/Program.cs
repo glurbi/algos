@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 
-namespace HasCycle
+namespace DetectCycleUndirectedGraph
 {
     class Program
     {
@@ -85,7 +85,6 @@ namespace HasCycle
                 (0, 3),
                 (3, 4),
             };
-
             Debug.Assert(new UndirectedGraph(edges).HasCycle());
 
             edges = new List<(int, int)>()
@@ -95,8 +94,14 @@ namespace HasCycle
                 (0, 3),
                 (3, 4),
             };
-
             Debug.Assert(!new UndirectedGraph(edges).HasCycle());
+
+            edges = new List<(int, int)>()
+            {
+                (1, 0),
+                (1, 0),
+            };
+            Debug.Assert(new UndirectedGraph(edges).HasCycle());
 
             Console.ReadKey();
         }
