@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace HasCycle
 {
@@ -8,6 +9,15 @@ namespace HasCycle
         class UndirectedGraph
         {
             private Dictionary<int, List<int>> adjacencies = new Dictionary<int, List<int>>();
+
+            public UndirectedGraph(ICollection<(int,int)> edges)
+            {
+                foreach (var (u,v) in edges)
+                {
+                    AddEdge(u, v);
+                    AddEdge(v, u);
+                }
+            }
 
             public void AddEdge(int u, int v)
             {
@@ -18,15 +28,9 @@ namespace HasCycle
                 }
 
                 listU.Add(v);
-
-                if (!adjacencies.TryGetValue(v, out var listV))
-                {
-                    listV = new List<int>();
-                    adjacencies[v] = listV;
-                }
-
-                listV.Add(u);
             }
+
+
             public bool HasCycle()
             {
                 foreach (var u in adjacencies.Keys)
@@ -71,14 +75,30 @@ namespace HasCycle
 
         static void Main(string[] args)
         {
-            var graph = new UndirectedGraph();
-            graph.AddEdge(1, 0);
-            graph.AddEdge(1, 2);
-            graph.AddEdge(2, 0);
-            graph.AddEdge(0, 3);
-            graph.AddEdge(3, 4);
+            List<(int, int)> edges;
 
-            Console.WriteLine(graph.HasCycle());
+            edges = new List<(int, int)>()
+            {
+                (1, 0),
+                (1, 2),
+                (2, 0),
+                (0, 3),
+                (3, 4),
+            };
+
+            Debug.Assert(new UndirectedGraph(edges).HasCycle());
+
+            edges = new List<(int, int)>()
+            {
+                (1, 0),
+                (1, 2),
+                (0, 3),
+                (3, 4),
+            };
+
+            Debug.Assert(!new UndirectedGraph(edges).HasCycle());
+
+            Console.ReadKey();
         }
     }
 }
