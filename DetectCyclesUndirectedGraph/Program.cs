@@ -35,43 +35,35 @@ namespace DetectCycleUndirectedGraph
             {
                 foreach (var u in adjacencies.Keys)
                 {
-                    var visitedEdges = new HashSet<(int, int)>();
-                    var visitedNodes = new HashSet<int>();
+                    var visited = new HashSet<int> { u };
 
-                    return HasCycle(visitedEdges, visitedNodes, u);
+                    return HasCycle(visited, u, -1);
                 }
 
                 return false;
 
-                bool HasCycle(HashSet<(int, int)> visitedEdges, HashSet<int> visitedNodes, int u)
+                bool HasCycle(HashSet<int> visited, int u, int previous)
                 {
-                    if (!visitedNodes.Add(u))
-                        return true;
-
                     foreach (var v in adjacencies[u])
                     {
-                        var edge = MakeEdge(u, v);
-                        if (visitedEdges.Add(edge))
+                        if (visited.Add(v))
                         {
-                            if (HasCycle(visitedEdges, visitedNodes, v))
+                            if (HasCycle(visited, v, u))
                             {
                                 return true;
                             }
-                            else
-                            {
-                                visitedNodes.Remove(v);
-                                visitedEdges.Remove(edge);
-                            }
+                        }
+                        else if (v != previous)
+                        {
+                            return true;
                         }
                     }
+                    visited.Remove(u);
 
                     return false;
                 }
-
-                (int a, int b) MakeEdge(int u, int v) => u < v ? (u, v) : (v, u);
             }
         }
-
 
         static void Main(string[] args)
         {
@@ -95,13 +87,6 @@ namespace DetectCycleUndirectedGraph
                 (3, 4),
             };
             Debug.Assert(!new UndirectedGraph(edges).HasCycle());
-
-            edges = new List<(int, int)>()
-            {
-                (1, 0),
-                (1, 0),
-            };
-            Debug.Assert(new UndirectedGraph(edges).HasCycle());
 
             Console.ReadKey();
         }
