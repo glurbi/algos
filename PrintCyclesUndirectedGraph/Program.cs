@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 
 namespace PrintCycleUndirectedGraph
 {
@@ -30,36 +31,35 @@ namespace PrintCycleUndirectedGraph
                 listU.Add(v);
             }
 
-            public HashSet<SortedSet<int>> GetCycles()
+            public HashSet<List<int>> GetCycles()
             {
-                var cycles = new HashSet<SortedSet<int>>();
+                var cycles = new HashSet<List<int>>(new CycleComparer());
 
                 foreach (var u in adjacencies.Keys)
                 {
-                    var visited = new HashSet<int>();
+                    var visited = new HashSet<int> { u };
 
-                    SearchCycles(visited, u);
+                    SearchCycles(visited, u, -1, u);
                 }
 
                 return cycles;
 
-                void SearchCycles(HashSet<int> visited, int u)
+                void SearchCycles(HashSet<int> visited, int u, int previous, int start)
                 {
-                    if (visited.Add(u))
+                    foreach (var v in adjacencies[u])
                     {
-                        foreach (var v in adjacencies[u])
+                        if (visited.Add(v))
                         {
-                            if (v != u)
-                            {
-                                SearchCycles(visited, v);
-                            }
+                            SearchCycles(visited, v, u, start);
                         }
-                        visited.Remove(u);
+                        else if (v != previous && v == start)
+                        {
+                            var cycle = new List<int>(visited);
+                            cycle.Sort();
+                            cycles.Add(cycle);
+                        }
                     }
-                    else
-                    {
-                        Console.WriteLine("[" + string.Join(',', visited) + "]");
-                    }
+                    visited.Remove(u);
                 }
             }
 
@@ -70,6 +70,19 @@ namespace PrintCycleUndirectedGraph
                 {
                     Console.WriteLine("[" + string.Join(',', cycle) + "]");
                 }
+            }
+        }
+
+        class CycleComparer : IEqualityComparer<List<int>>
+        {
+            public bool Equals(List<int> x, List<int> y)
+            {
+                return x.SequenceEqual(y);
+            }
+
+            public int GetHashCode(List<int> l)
+            {
+                return l.Aggregate(1, (agg, curr) => agg * 31 + curr);
             }
         }
 
