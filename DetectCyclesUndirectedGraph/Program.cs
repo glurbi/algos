@@ -37,7 +37,8 @@ namespace DetectCycleUndirectedGraph
                 {
                     var visited = new HashSet<int> { u };
 
-                    return HasCycle(visited, u, -1);
+                    if (HasCycle(visited, u, -1))
+                        return true;
                 }
 
                 return false;

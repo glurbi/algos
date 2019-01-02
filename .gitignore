@@ -3,7 +3,5 @@
 ################################################################################
 
 /.vs
-/DetectCyclesUndirectedGraph/bin
-/DetectCyclesUndirectedGraph/obj
-/PrintCyclesUndirectedGraph/bin
-/PrintCyclesUndirectedGraph/obj
+/**/bin
+/**/obj
